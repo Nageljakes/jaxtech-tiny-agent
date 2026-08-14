@@ -125,11 +125,11 @@ class FollowUpCoordinator:
                 "weighted_total": decision["weighted_total"],
             }
         )
-        notified = advance_workflow(
+        published = advance_workflow(
             record,
-            PipelineStage.NOTIFIED,
+            PipelineStage.ESCALATION_PUBLISHED,
             {"event_id": event_id},
         )
         return self.repository.save(
-            notified, expected_revision=record.revision
+            published, expected_revision=record.revision
         )

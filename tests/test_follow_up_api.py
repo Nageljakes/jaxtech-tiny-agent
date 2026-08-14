@@ -34,7 +34,9 @@ class StubCoordinator:
         self, submission_id: str, response: str
     ) -> WorkflowRecord:
         self.response_calls.append((submission_id, response))
-        return self.record.model_copy(update={"stage": PipelineStage.NOTIFIED})
+        return self.record.model_copy(
+            update={"stage": PipelineStage.ESCALATION_PUBLISHED}
+        )
 
 
 def fixture_record() -> WorkflowRecord:
@@ -102,7 +104,7 @@ def test_follow_up_and_response_routes_delegate_to_coordinator(monkeypatch) -> N
     assert follow_up.status_code == 200
     assert follow_up.json()["stage"] == "waiting_for_information"
     assert response.status_code == 200
-    assert response.json()["stage"] == "notified"
+    assert response.json()["stage"] == "escalation_published"
     assert coordinator.follow_up_calls == ["syn-audit-001"]
     assert coordinator.response_calls == [
         ("syn-audit-001", "Forty synthetic items daily")

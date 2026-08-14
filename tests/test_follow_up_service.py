@@ -96,7 +96,7 @@ def test_response_reruns_only_scope_and_ranking_then_escalates() -> None:
     )
 
     assert executor.calls == ["scoping_agent", "ranking_agent"]
-    assert result.stage is PipelineStage.NOTIFIED
+    assert result.stage is PipelineStage.ESCALATION_PUBLISHED
     assert result.revision == 10
     assert result.artifacts["decision_ready"]["weighted_total"] == 8.2
     assert result.artifacts["decision_ready"]["scope_pack"]["open_questions"] == []
@@ -156,6 +156,6 @@ def test_failed_notification_retries_without_rerunning_agents() -> None:
 
     result = asyncio.run(coordinator.deliver_decision_ready("syn-retry"))
 
-    assert result.stage is PipelineStage.NOTIFIED
+    assert result.stage is PipelineStage.ESCALATION_PUBLISHED
     assert executor.calls == ["scoping_agent", "ranking_agent"]
     assert notifier.events[0]["event_id"] == "decision-ready:syn-retry:9"
