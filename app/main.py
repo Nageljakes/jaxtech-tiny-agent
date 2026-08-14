@@ -5,7 +5,7 @@ import os
 import secrets
 from typing import Annotated, Literal
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from google.cloud import firestore
@@ -14,7 +14,9 @@ from pydantic import BaseModel, Field
 from app.adk_executor import StructuredAdkExecutor
 from app.agent import MODEL
 from app.firestore_repository import FirestoreWorkflowRepository
+from app.follow_up_service import FollowUpCoordinator
 from app.orchestrator import ScopingOrchestrator
+from app.pubsub_notifier import PubSubNotificationSink
 from app.service import AgentService
 from app.workflow import WorkflowRecord
 
@@ -35,7 +37,10 @@ app.add_middleware(
 @app.middleware("http")
 async def protect_billable_submission_endpoint(request, call_next):
     """Reject unauthorized workflow runs before Firestore or Gemini initialization."""
-    if request.url.path == "/api/submissions":
+    if (
+        request.method != "OPTIONS"
+        and request.url.path.startswith("/api/submissions")
+    ):
         configured_key = os.getenv("TINY_DEMO_KEY")
         if not configured_key:
             return JSONResponse(
@@ -77,15 +82,34 @@ class SubmissionRequest(BaseModel):
     synthetic: Literal[True]
 
 
+class FollowUpResponseRequest(BaseModel):
+    response: str = Field(min_length=1, max_length=20_000, pattern=r".*\S.*")
+    synthetic: Literal[True]
+
+
 def get_agent_service() -> AgentService:
     return _agent_service
 
 
 @lru_cache(maxsize=1)
+def get_workflow_repository() -> FirestoreWorkflowRepository:
+    return FirestoreWorkflowRepository(firestore.Client())
+
+
+@lru_cache(maxsize=1)
 def get_scoping_orchestrator() -> ScopingOrchestrator:
     """Construct production dependencies lazily so validation fails before cloud I/O."""
-    repository = FirestoreWorkflowRepository(firestore.Client())
-    return ScopingOrchestrator(repository, StructuredAdkExecutor())
+    return ScopingOrchestrator(get_workflow_repository(), StructuredAdkExecutor())
+
+
+@lru_cache(maxsize=1)
+def get_follow_up_coordinator() -> FollowUpCoordinator:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "")
+    topic_id = os.getenv("TINY_DECISION_TOPIC", "tiny-decision-ready")
+    notifier = PubSubNotificationSink(project_id=project_id, topic_id=topic_id)
+    return FollowUpCoordinator(
+        get_workflow_repository(), StructuredAdkExecutor(), notifier
+    )
 
 
 @app.get("/health")
@@ -125,3 +149,43 @@ async def process_synthetic_submission(
 ) -> WorkflowRecord:
     """Run the complete fixture-gated autonomous scoping workflow."""
     return await orchestrator.run(request.submission_id, request.task_description)
+
+
+@app.get("/api/submissions/{submission_id}", response_model=WorkflowRecord)
+def get_synthetic_submission(
+    submission_id: str,
+    repository: Annotated[
+        FirestoreWorkflowRepository, Depends(get_workflow_repository)
+    ],
+) -> WorkflowRecord:
+    record = repository.load(submission_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Synthetic submission not found")
+    return record
+
+
+@app.post(
+    "/api/submissions/{submission_id}/follow-up",
+    response_model=WorkflowRecord,
+)
+def request_synthetic_follow_up(
+    submission_id: str,
+    coordinator: Annotated[
+        FollowUpCoordinator, Depends(get_follow_up_coordinator)
+    ],
+) -> WorkflowRecord:
+    return coordinator.request_information(submission_id)
+
+
+@app.post(
+    "/api/submissions/{submission_id}/responses",
+    response_model=WorkflowRecord,
+)
+async def process_synthetic_follow_up_response(
+    submission_id: str,
+    request: FollowUpResponseRequest,
+    coordinator: Annotated[
+        FollowUpCoordinator, Depends(get_follow_up_coordinator)
+    ],
+) -> WorkflowRecord:
+    return await coordinator.process_response(submission_id, request.response)
