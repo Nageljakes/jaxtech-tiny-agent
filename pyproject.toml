@@ -1,0 +1,24 @@
+[project]
+name = "jaxtech-tiny-agent"
+version = "0.1.0"
+description = "Google ADK autonomous scoping agent for Jaxtech"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "fastapi==0.141.1",
+  "google-adk==2.7.0",
+  "uvicorn[standard]==0.52.3",
+]
+
+[dependency-groups]
+dev = [
+  "httpx==0.28.1",
+  "pytest==9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = [
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated:DeprecationWarning",
+]
