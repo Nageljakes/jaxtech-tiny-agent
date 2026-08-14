@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 from app.domain import RiskAssessment, RiskDecision, RiskFlag
@@ -74,7 +76,7 @@ class FakeExecutor:
             ),
         }
 
-    def run(self, agent_name: str, context: dict):
+    async def run(self, agent_name: str, context: dict):
         self.calls.append(agent_name)
         return self.outputs[agent_name]
 
@@ -84,7 +86,9 @@ def test_complete_pipeline_runs_in_order_and_persists_ranked_state() -> None:
     repository = InMemoryWorkflowRepository()
     orchestrator = ScopingOrchestrator(repository, executor)
 
-    result = orchestrator.run("syn-001", "Put synthetic form submissions into Excel")
+    result = asyncio.run(
+        orchestrator.run("syn-001", "Put synthetic form submissions into Excel")
+    )
 
     assert executor.calls == [
         "intake_agent",
@@ -104,7 +108,9 @@ def test_risk_veto_stops_all_downstream_agents() -> None:
     executor = FakeExecutor(RiskDecision.VETO)
     orchestrator = ScopingOrchestrator(InMemoryWorkflowRepository(), executor)
 
-    result = orchestrator.run("syn-unsafe", "Synthetic safety-critical control")
+    result = asyncio.run(
+        orchestrator.run("syn-unsafe", "Synthetic safety-critical control")
+    )
 
     assert executor.calls == ["intake_agent", "risk_agent"]
     assert result.stage is PipelineStage.VETOED
@@ -114,13 +120,17 @@ def test_risk_veto_stops_all_downstream_agents() -> None:
 def test_completed_pipeline_replay_is_idempotent_and_makes_no_agent_calls() -> None:
     repository = InMemoryWorkflowRepository()
     first_executor = FakeExecutor()
-    first = ScopingOrchestrator(repository, first_executor).run(
-        "syn-001", "Put synthetic form submissions into Excel"
+    first = asyncio.run(
+        ScopingOrchestrator(repository, first_executor).run(
+            "syn-001", "Put synthetic form submissions into Excel"
+        )
     )
     replay_executor = FakeExecutor()
 
-    replay = ScopingOrchestrator(repository, replay_executor).run(
-        "syn-001", "Put synthetic form submissions into Excel"
+    replay = asyncio.run(
+        ScopingOrchestrator(repository, replay_executor).run(
+            "syn-001", "Put synthetic form submissions into Excel"
+        )
     )
 
     assert replay == first
@@ -131,7 +141,9 @@ def test_review_decision_stops_before_downstream_agents() -> None:
     executor = FakeExecutor(RiskDecision.REVIEW)
     orchestrator = ScopingOrchestrator(InMemoryWorkflowRepository(), executor)
 
-    result = orchestrator.run("syn-review", "Synthetic workflow requiring approval")
+    result = asyncio.run(
+        orchestrator.run("syn-review", "Synthetic workflow requiring approval")
+    )
 
     assert executor.calls == ["intake_agent", "risk_agent"]
     assert result.stage is PipelineStage.REVIEW_REQUIRED
@@ -139,26 +151,30 @@ def test_review_decision_stops_before_downstream_agents() -> None:
 
 def test_pipeline_resumes_after_failure_from_last_persisted_boundary() -> None:
     class FailingExecutor(FakeExecutor):
-        def run(self, agent_name: str, context: dict):
+        async def run(self, agent_name: str, context: dict):
             if agent_name == "mapping_agent":
                 self.calls.append(agent_name)
                 raise RuntimeError("synthetic transient failure")
-            return super().run(agent_name, context)
+            return await super().run(agent_name, context)
 
     repository = InMemoryWorkflowRepository()
     failing = FailingExecutor()
     orchestrator = ScopingOrchestrator(repository, failing)
 
     with pytest.raises(RuntimeError, match="synthetic transient failure"):
-        orchestrator.run("syn-resume", "Put synthetic submissions into Excel")
+        asyncio.run(
+            orchestrator.run("syn-resume", "Put synthetic submissions into Excel")
+        )
 
     persisted = repository.load("syn-resume")
     assert persisted is not None
     assert persisted.stage is PipelineStage.FEASIBILITY_COMPLETE
 
     resumed_executor = FakeExecutor()
-    result = ScopingOrchestrator(repository, resumed_executor).run(
-        "syn-resume", "Put synthetic submissions into Excel"
+    result = asyncio.run(
+        ScopingOrchestrator(repository, resumed_executor).run(
+            "syn-resume", "Put synthetic submissions into Excel"
+        )
     )
 
     assert resumed_executor.calls == ["mapping_agent", "scoping_agent", "ranking_agent"]

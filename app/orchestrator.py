@@ -21,7 +21,7 @@ from app.workflow import (
 
 
 class AgentExecutor(Protocol):
-    def run(self, agent_name: str, context: dict[str, Any]) -> Any: ...
+    async def run(self, agent_name: str, context: dict[str, Any]) -> Any: ...
 
 
 class WorkflowRepository(Protocol):
@@ -45,7 +45,7 @@ class ScopingOrchestrator:
         advanced = advance_workflow(record, stage, artifact)
         return self.repository.save(advanced, expected_revision=record.revision)
 
-    def run(self, submission_id: str, task_description: str) -> WorkflowRecord:
+    async def run(self, submission_id: str, task_description: str) -> WorkflowRecord:
         record = self.repository.create(
             create_synthetic_workflow(submission_id, task_description)
         )
@@ -60,7 +60,7 @@ class ScopingOrchestrator:
 
             if record.stage is PipelineStage.RECEIVED:
                 intake = IntakeResult.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "intake_agent",
                         {"task_description": record.task_description, "synthetic": True},
                     )
@@ -74,7 +74,7 @@ class ScopingOrchestrator:
 
             if record.stage is PipelineStage.INTAKE_COMPLETE:
                 risk = RiskAssessment.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "risk_agent",
                         {"intake": record.artifacts[PipelineStage.INTAKE_COMPLETE.value]},
                     )
@@ -89,7 +89,7 @@ class ScopingOrchestrator:
 
             if record.stage is PipelineStage.RISK_CLEARED:
                 feasibility = FeasibilityResult.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "feasibility_agent",
                         {
                             "intake": record.artifacts[PipelineStage.INTAKE_COMPLETE.value],
@@ -116,7 +116,7 @@ class ScopingOrchestrator:
                     for item in candidate_capabilities(query)
                 ]
                 mapping = MappingResult.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "mapping_agent",
                         {
                             "intake": intake.model_dump(mode="json"),
@@ -137,7 +137,7 @@ class ScopingOrchestrator:
 
             if record.stage is PipelineStage.MAPPING_COMPLETE:
                 scope = ScopePack.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "scoping_agent",
                         {"validated_artifacts": record.artifacts},
                     )
@@ -151,7 +151,7 @@ class ScopingOrchestrator:
 
             if record.stage is PipelineStage.SCOPED:
                 assessment = RankingAssessment.model_validate(
-                    self.executor.run(
+                    await self.executor.run(
                         "ranking_agent",
                         {"scope_pack": record.artifacts[PipelineStage.SCOPED.value]},
                     )

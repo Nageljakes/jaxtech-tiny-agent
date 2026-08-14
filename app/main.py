@@ -1,13 +1,22 @@
 """Cloud Run HTTP entrypoint for the Jaxtech Tiny stack proof."""
 
-from typing import Annotated
+from functools import lru_cache
+import os
+import secrets
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from google.cloud import firestore
 from pydantic import BaseModel, Field
 
+from app.adk_executor import StructuredAdkExecutor
 from app.agent import MODEL
+from app.firestore_repository import FirestoreWorkflowRepository
+from app.orchestrator import ScopingOrchestrator
 from app.service import AgentService
+from app.workflow import WorkflowRecord
 
 app = FastAPI(title="Jaxtech Tiny", version="0.1.0")
 app.add_middleware(
@@ -19,8 +28,24 @@ app.add_middleware(
     ],
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "X-Tiny-Demo-Key"],
 )
+
+
+@app.middleware("http")
+async def protect_billable_submission_endpoint(request, call_next):
+    """Reject unauthorized workflow runs before Firestore or Gemini initialization."""
+    if request.url.path == "/api/submissions":
+        configured_key = os.getenv("TINY_DEMO_KEY")
+        if not configured_key:
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Synthetic demo endpoint is not configured"},
+            )
+        supplied_key = request.headers.get("X-Tiny-Demo-Key", "")
+        if not secrets.compare_digest(supplied_key, configured_key):
+            return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    return await call_next(request)
 
 _agent_service = AgentService()
 
@@ -46,8 +71,21 @@ class ChatResponse(BaseModel):
     source: str = Field(serialization_alias="from")
 
 
+class SubmissionRequest(BaseModel):
+    submission_id: str = Field(pattern=r"^syn-[a-zA-Z0-9-]{1,80}$")
+    task_description: str = Field(min_length=1, max_length=50_000, pattern=r".*\S.*")
+    synthetic: Literal[True]
+
+
 def get_agent_service() -> AgentService:
     return _agent_service
+
+
+@lru_cache(maxsize=1)
+def get_scoping_orchestrator() -> ScopingOrchestrator:
+    """Construct production dependencies lazily so validation fails before cloud I/O."""
+    repository = FirestoreWorkflowRepository(firestore.Client())
+    return ScopingOrchestrator(repository, StructuredAdkExecutor())
 
 
 @app.get("/health")
@@ -78,3 +116,12 @@ async def chat(
     """Compatibility endpoint used while the challenge UI migrates to Google."""
     reply = await service.prove(request.message)
     return ChatResponse(reply=reply, source="google-adk")
+
+
+@app.post("/api/submissions", response_model=WorkflowRecord)
+async def process_synthetic_submission(
+    request: SubmissionRequest,
+    orchestrator: Annotated[ScopingOrchestrator, Depends(get_scoping_orchestrator)],
+) -> WorkflowRecord:
+    """Run the complete fixture-gated autonomous scoping workflow."""
+    return await orchestrator.run(request.submission_id, request.task_description)
