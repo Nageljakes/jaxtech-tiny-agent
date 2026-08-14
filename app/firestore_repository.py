@@ -3,9 +3,10 @@
 from typing import Any
 
 from google.api_core.exceptions import AlreadyExists
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 from app.repository import RevisionConflict
-from app.workflow import WorkflowRecord
+from app.workflow import PipelineStage, WorkflowRecord
 
 
 class FirestoreWorkflowRepository:
@@ -40,6 +41,15 @@ class FirestoreWorkflowRepository:
         if not snapshot.exists:
             return None
         return WorkflowRecord.model_validate(snapshot.to_dict())
+
+    def list_by_stage(self, stage: PipelineStage) -> list[WorkflowRecord]:
+        query = self._collection.where(
+            filter=FieldFilter("stage", "==", stage.value)
+        ).where(filter=FieldFilter("synthetic", "==", True))
+        return [
+            WorkflowRecord.model_validate(snapshot.to_dict())
+            for snapshot in query.stream()
+        ]
 
     def save(self, record: WorkflowRecord, *, expected_revision: int) -> WorkflowRecord:
         ref = self._document(record.submission_id)

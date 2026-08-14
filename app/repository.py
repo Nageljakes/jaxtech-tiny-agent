@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 from app.workflow import WorkflowRecord
+from app.workflow import PipelineStage
 
 
 class RevisionConflict(RuntimeError):
@@ -33,7 +34,14 @@ class InMemoryWorkflowRepository:
 
     def load(self, submission_id: str) -> WorkflowRecord | None:
         record = self._records.get(submission_id)
-        return deepcopy(record) if record is not None else None
+        return deepcopy(record) if record else None
+
+    def list_by_stage(self, stage: PipelineStage) -> list[WorkflowRecord]:
+        return [
+            deepcopy(record)
+            for record in self._records.values()
+            if record.stage is stage and record.synthetic
+        ]
 
     def save(self, record: WorkflowRecord, *, expected_revision: int) -> WorkflowRecord:
         existing = self._records.get(record.submission_id)

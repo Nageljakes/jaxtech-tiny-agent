@@ -26,7 +26,10 @@ class PubSubNotificationSink:
         event_type = event.get("event_type")
         if not isinstance(event_id, str) or not event_id:
             raise ValueError("notification event_id is required")
-        if event_type != "submission.decision_ready":
+        if event_type not in {
+            "submission.decision_ready",
+            "submission.follow_up_reminder",
+        }:
             raise ValueError("unsupported notification event_type")
         payload = json.dumps(
             event,

@@ -3,7 +3,9 @@
 from app.workflow import PipelineStage, WorkflowRecord, advance_workflow
 
 
-def create_follow_up(record: WorkflowRecord) -> WorkflowRecord:
+def create_follow_up(
+    record: WorkflowRecord, *, last_contact_at: str | None = None
+) -> WorkflowRecord:
     if record.stage is not PipelineStage.RANKED:
         raise ValueError(
             f"expected stage ranked, received {record.stage.value}"
@@ -12,10 +14,13 @@ def create_follow_up(record: WorkflowRecord) -> WorkflowRecord:
     questions = scope.get("open_questions", [])
     if not questions:
         raise ValueError("scope pack has no open questions")
+    artifact = {"questions": questions, "attempt": 1}
+    if last_contact_at is not None:
+        artifact["last_contact_at"] = last_contact_at
     return advance_workflow(
         record,
         PipelineStage.WAITING_FOR_INFORMATION,
-        {"questions": questions, "attempt": 1},
+        artifact,
     )
 
 

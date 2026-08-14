@@ -37,6 +37,28 @@ class FakeCollection:
     def document(self, key: str) -> FakeDocument:
         return FakeDocument(self.store, key)
 
+    def where(self, *, filter):
+        return FakeQuery(self.store, [(filter.field_path, filter.value)])
+
+
+class FakeQuery:
+    def __init__(self, store: dict[str, dict], filters: list[tuple[str, object]]) -> None:
+        self.store = store
+        self.filters = filters
+
+    def where(self, *, filter):
+        return FakeQuery(
+            self.store,
+            self.filters + [(filter.field_path, filter.value)],
+        )
+
+    def stream(self):
+        return [
+            FakeSnapshot(data)
+            for data in self.store.values()
+            if all(data.get(field) == value for field, value in self.filters)
+        ]
+
 
 class FakeTransaction:
     def __init__(self, store: dict[str, dict]) -> None:
@@ -93,3 +115,25 @@ def test_firestore_repository_rejects_stale_revision() -> None:
 
     with pytest.raises(RevisionConflict):
         repository.save(record, expected_revision=2)
+
+
+def test_firestore_stage_query_returns_only_synthetic_matching_records() -> None:
+    client = FakeFirestoreClient()
+    repository = FirestoreWorkflowRepository(client)
+    waiting = create_synthetic_workflow("syn-waiting", "Synthetic task").model_copy(
+        update={"stage": PipelineStage.WAITING_FOR_INFORMATION}
+    )
+    ranked = create_synthetic_workflow("syn-ranked", "Synthetic task").model_copy(
+        update={"stage": PipelineStage.RANKED}
+    )
+    client.store["syn-waiting"] = waiting.model_dump(mode="json")
+    client.store["syn-ranked"] = ranked.model_dump(mode="json")
+    client.store["real-waiting"] = {
+        **waiting.model_dump(mode="json"),
+        "submission_id": "real-waiting",
+        "synthetic": False,
+    }
+
+    result = repository.list_by_stage(PipelineStage.WAITING_FOR_INFORMATION)
+
+    assert [record.submission_id for record in result] == ["syn-waiting"]

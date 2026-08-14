@@ -1,6 +1,7 @@
 """Persisted follow-up coordination with selective agent re-processing."""
 
-from typing import Any, Protocol
+from datetime import UTC, datetime
+from typing import Any, Callable, Protocol
 
 from app.follow_up import (
     apply_follow_up_response,
@@ -35,6 +36,7 @@ class FollowUpCoordinator:
         notifier: NotificationSink,
         *,
         threshold: float = 8.0,
+        clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     ) -> None:
         if not 0 <= threshold <= 10:
             raise ValueError("threshold must be between 0 and 10")
@@ -42,6 +44,7 @@ class FollowUpCoordinator:
         self.executor = executor
         self.notifier = notifier
         self.threshold = threshold
+        self.clock = clock
 
     def _load(self, submission_id: str) -> WorkflowRecord:
         record = self.repository.load(submission_id)
@@ -51,7 +54,9 @@ class FollowUpCoordinator:
 
     def request_information(self, submission_id: str) -> WorkflowRecord:
         record = self._load(submission_id)
-        waiting = create_follow_up(record)
+        waiting = create_follow_up(
+            record, last_contact_at=self.clock().isoformat()
+        )
         return self.repository.save(waiting, expected_revision=record.revision)
 
     async def process_response(

@@ -15,6 +15,7 @@ from app.adk_executor import StructuredAdkExecutor
 from app.agent import MODEL
 from app.firestore_repository import FirestoreWorkflowRepository
 from app.follow_up_service import FollowUpCoordinator
+from app.follow_up_worker import FollowUpReminderWorker
 from app.orchestrator import ScopingOrchestrator
 from app.pubsub_notifier import PubSubNotificationSink
 from app.service import AgentService
@@ -48,6 +49,16 @@ async def protect_billable_submission_endpoint(request, call_next):
                 content={"detail": "Synthetic demo endpoint is not configured"},
             )
         supplied_key = request.headers.get("X-Tiny-Demo-Key", "")
+        if not secrets.compare_digest(supplied_key, configured_key):
+            return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    if request.url.path == "/internal/follow-up-reminders":
+        configured_key = os.getenv("TINY_SCHEDULER_KEY")
+        if not configured_key:
+            return JSONResponse(
+                status_code=503,
+                content={"detail": "Scheduler endpoint is not configured"},
+            )
+        supplied_key = request.headers.get("X-Tiny-Scheduler-Key", "")
         if not secrets.compare_digest(supplied_key, configured_key):
             return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
     return await call_next(request)
@@ -103,12 +114,23 @@ def get_scoping_orchestrator() -> ScopingOrchestrator:
 
 
 @lru_cache(maxsize=1)
-def get_follow_up_coordinator() -> FollowUpCoordinator:
+def get_notification_sink() -> PubSubNotificationSink:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "")
     topic_id = os.getenv("TINY_DECISION_TOPIC", "tiny-decision-ready")
-    notifier = PubSubNotificationSink(project_id=project_id, topic_id=topic_id)
+    return PubSubNotificationSink(project_id=project_id, topic_id=topic_id)
+
+
+@lru_cache(maxsize=1)
+def get_follow_up_coordinator() -> FollowUpCoordinator:
     return FollowUpCoordinator(
-        get_workflow_repository(), StructuredAdkExecutor(), notifier
+        get_workflow_repository(), StructuredAdkExecutor(), get_notification_sink()
+    )
+
+
+@lru_cache(maxsize=1)
+def get_follow_up_worker() -> FollowUpReminderWorker:
+    return FollowUpReminderWorker(
+        get_workflow_repository(), get_notification_sink()
     )
 
 
@@ -189,3 +211,13 @@ async def process_synthetic_follow_up_response(
     ],
 ) -> WorkflowRecord:
     return await coordinator.process_response(submission_id, request.response)
+
+
+@app.post("/internal/follow-up-reminders")
+async def run_follow_up_reminders(
+    worker: Annotated[
+        FollowUpReminderWorker, Depends(get_follow_up_worker)
+    ],
+) -> dict[str, int]:
+    """Cloud Scheduler target; performs no model inference."""
+    return await worker.run()
