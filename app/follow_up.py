@@ -42,6 +42,7 @@ def finalize_rescore(
     *,
     weighted_total: float,
     threshold: float,
+    details: dict | None = None,
 ) -> WorkflowRecord:
     if record.stage is not PipelineStage.RESPONSE_RECEIVED:
         raise ValueError(
@@ -53,12 +54,16 @@ def finalize_rescore(
     target = (
         PipelineStage.DECISION_READY if escalate else PipelineStage.RESCORED
     )
-    return advance_workflow(
-        record,
-        target,
+    artifact = dict(details or {})
+    artifact.update(
         {
             "weighted_total": weighted_total,
             "threshold": threshold,
             "escalate": escalate,
-        },
+        }
+    )
+    return advance_workflow(
+        record,
+        target,
+        artifact,
     )

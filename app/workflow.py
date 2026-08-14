@@ -20,6 +20,7 @@ class PipelineStage(StrEnum):
     RESPONSE_RECEIVED = "response_received"
     RESCORED = "rescored"
     DECISION_READY = "decision_ready"
+    NOTIFIED = "notified"
 
 
 _ALLOWED_NEXT: dict[PipelineStage, tuple[PipelineStage, ...]] = {
@@ -40,7 +41,8 @@ _ALLOWED_NEXT: dict[PipelineStage, tuple[PipelineStage, ...]] = {
         PipelineStage.DECISION_READY,
     ),
     PipelineStage.RESCORED: (),
-    PipelineStage.DECISION_READY: (),
+    PipelineStage.DECISION_READY: (PipelineStage.NOTIFIED,),
+    PipelineStage.NOTIFIED: (),
     PipelineStage.REVIEW_REQUIRED: (),
     PipelineStage.VETOED: (),
 }
