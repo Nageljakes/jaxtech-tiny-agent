@@ -3,7 +3,13 @@
 from google.adk.agents import Agent
 
 from app.agent import MODEL
-from app.schemas import FeasibilityResult, IntakeResult, MappingResult
+from app.schemas import (
+    FeasibilityResult,
+    IntakeResult,
+    MappingResult,
+    RankingAssessment,
+    ScopePack,
+)
 
 intake_agent = Agent(
     name="intake_agent",
@@ -49,4 +55,36 @@ mapping_agent = Agent(
     ),
     output_schema=MappingResult,
     output_key="mapping_result",
+)
+
+scoping_agent = Agent(
+    name="scoping_agent",
+    model=MODEL,
+    description="Produces the decision-ready written scope pack.",
+    instruction=(
+        "Using only validated intake, feasibility, risk, and catalogue mapping state, "
+        "produce a complete written scope pack. Include the problem, ordered workflow, "
+        "agent architecture with named technologies and responsibilities, concrete "
+        "integrations, development hours, assumptions, exclusions, and open questions. "
+        "Do not remove risk exclusions or claim access is authorised. Return ScopePack "
+        "exactly."
+    ),
+    output_schema=ScopePack,
+    output_key="scope_pack",
+)
+
+ranking_agent = Agent(
+    name="ranking_agent",
+    model=MODEL,
+    description="Assesses usefulness, feasibility, and interest on explicit scales.",
+    instruction=(
+        "Assess the synthetic scope pack from 0 to 10 on usefulness, feasibility, and "
+        "interest. Usefulness means recurring human effort and operational value; "
+        "feasibility means technical, permission, safety, and delivery realism; interest "
+        "means demonstration value and distinctiveness. Give a concise evidence-based "
+        "justification. Do not calculate a total or rank; deterministic code does that. "
+        "Return RankingAssessment exactly."
+    ),
+    output_schema=RankingAssessment,
+    output_key="ranking_assessment",
 )
