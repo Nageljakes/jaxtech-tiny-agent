@@ -3,6 +3,7 @@
 from google.adk.agents import Agent
 
 from app.agent import MODEL
+from app.domain import RiskAssessment
 from app.schemas import (
     FeasibilityResult,
     IntakeResult,
@@ -25,6 +26,22 @@ intake_agent = Agent(
     output_schema=IntakeResult,
     output_key="intake_result",
 )
+
+risk_agent = Agent(
+    name="risk_agent",
+    model=MODEL,
+    description="Issues a binding safety, legality, privacy, and vendor-terms decision.",
+    instruction=(
+        "Review the synthetic intake result for POPIA or personal-data exposure, vendor "
+        "terms, money movement, physical safety, illegality, and cybersecurity abuse. "
+        "Return clear only when downstream scoping may safely continue, review when "
+        "accountable human approval is required, and veto when the requested automation "
+        "is unsafe or unlawful. A veto is binding. Return RiskAssessment exactly."
+    ),
+    output_schema=RiskAssessment,
+    output_key="risk_assessment",
+)
+
 
 feasibility_agent = Agent(
     name="feasibility_agent",
