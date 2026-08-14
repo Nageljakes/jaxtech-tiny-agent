@@ -16,6 +16,10 @@ class PipelineStage(StrEnum):
     MAPPING_COMPLETE = "mapping_complete"
     SCOPED = "scoped"
     RANKED = "ranked"
+    WAITING_FOR_INFORMATION = "waiting_for_information"
+    RESPONSE_RECEIVED = "response_received"
+    RESCORED = "rescored"
+    DECISION_READY = "decision_ready"
 
 
 _ALLOWED_NEXT: dict[PipelineStage, tuple[PipelineStage, ...]] = {
@@ -29,9 +33,16 @@ _ALLOWED_NEXT: dict[PipelineStage, tuple[PipelineStage, ...]] = {
     PipelineStage.FEASIBILITY_COMPLETE: (PipelineStage.MAPPING_COMPLETE,),
     PipelineStage.MAPPING_COMPLETE: (PipelineStage.SCOPED,),
     PipelineStage.SCOPED: (PipelineStage.RANKED,),
+    PipelineStage.RANKED: (PipelineStage.WAITING_FOR_INFORMATION,),
+    PipelineStage.WAITING_FOR_INFORMATION: (PipelineStage.RESPONSE_RECEIVED,),
+    PipelineStage.RESPONSE_RECEIVED: (
+        PipelineStage.RESCORED,
+        PipelineStage.DECISION_READY,
+    ),
+    PipelineStage.RESCORED: (),
+    PipelineStage.DECISION_READY: (),
     PipelineStage.REVIEW_REQUIRED: (),
     PipelineStage.VETOED: (),
-    PipelineStage.RANKED: (),
 }
 
 
