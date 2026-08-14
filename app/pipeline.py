@@ -3,7 +3,7 @@
 from google.adk.agents import Agent
 
 from app.agent import MODEL
-from app.schemas import FeasibilityResult, IntakeResult
+from app.schemas import FeasibilityResult, IntakeResult, MappingResult
 
 intake_agent = Agent(
     name="intake_agent",
@@ -33,4 +33,20 @@ feasibility_agent = Agent(
     ),
     output_schema=FeasibilityResult,
     output_key="feasibility_result",
+)
+
+mapping_agent = Agent(
+    name="mapping_agent",
+    model=MODEL,
+    description="Maps requirements only to verified Jaxtech catalogue capabilities.",
+    instruction=(
+        "Map the synthetic intake requirements only against the candidate capability "
+        "IDs supplied in session state. For every match, preserve the exact capability "
+        "ID, name the concrete external products, APIs, protocols, or devices required, "
+        "and explain the fit. Put unsupported needs in unmapped_requirements. Never "
+        "invent a capability ID or imply an integration is already authorised or "
+        "connected. Return MappingResult exactly."
+    ),
+    output_schema=MappingResult,
+    output_key="mapping_result",
 )

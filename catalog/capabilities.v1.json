@@ -1,0 +1,993 @@
+{
+  "version": "2026-08-14",
+  "source_repository": "Nageljakes/Jaxtechweb",
+  "source_commit": "4fae6c2",
+  "count": 197,
+  "capabilities": [
+    {
+      "id": "1password",
+      "name": "1password",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "3-statement-model",
+      "name": "3-statement-model",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "accelerated-computing-cudf",
+      "name": "accelerated-computing-cudf",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "adversarial-ux-test",
+      "name": "adversarial-ux-test",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "agentmail",
+      "name": "agentmail",
+      "category": "Email & Communication"
+    },
+    {
+      "id": "airtable",
+      "name": "airtable",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "antigravity-cli",
+      "name": "antigravity-cli",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "architecture-diagram",
+      "name": "architecture-diagram",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "arxiv",
+      "name": "arxiv",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "ascii-art",
+      "name": "ascii-art",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "ascii-video",
+      "name": "ascii-video",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "audiocraft-audio-generation",
+      "name": "audiocraft-audio-generation",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "auto-hub-workflow",
+      "name": "auto-hub-workflow",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "axolotl",
+      "name": "axolotl",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "baoyu-article-illustrator",
+      "name": "baoyu-article-illustrator",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "baoyu-comic",
+      "name": "baoyu-comic",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "baoyu-infographic",
+      "name": "baoyu-infographic",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "bioinformatics",
+      "name": "bioinformatics",
+      "category": "Health & Life Sciences"
+    },
+    {
+      "id": "blackbox",
+      "name": "blackbox",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "blender-mcp",
+      "name": "blender-mcp",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "blogwatcher",
+      "name": "blogwatcher",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "canvas",
+      "name": "canvas",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "chroma",
+      "name": "chroma",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "claude-code",
+      "name": "claude-code",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "claude-design",
+      "name": "claude-design",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "clip",
+      "name": "clip",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "cloudflare-temporary-deploy",
+      "name": "cloudflare-temporary-deploy",
+      "category": "Web Development"
+    },
+    {
+      "id": "codebase-inspection",
+      "name": "codebase-inspection",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "codex",
+      "name": "codex",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "comfyui",
+      "name": "comfyui",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "comps-analysis",
+      "name": "comps-analysis",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "computer-use",
+      "name": "computer-use",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "concept-diagrams",
+      "name": "concept-diagrams",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "creative-ideation",
+      "name": "creative-ideation",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "cudaq-guide",
+      "name": "cudaq-guide",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "cuopt-*",
+      "name": "cuopt-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "cupynumeric-*",
+      "name": "cupynumeric-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "darwinian-evolver",
+      "name": "darwinian-evolver",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "dcf-model",
+      "name": "dcf-model",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "deepstream-*",
+      "name": "deepstream-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "design-md",
+      "name": "design-md",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "digital-health-clinical-assessment",
+      "name": "digital-health-clinical-assessment",
+      "category": "Health & Life Sciences"
+    },
+    {
+      "id": "distributed-llm-pretraining",
+      "name": "distributed-llm-pretraining",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "doca-*",
+      "name": "doca-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "docker-management",
+      "name": "docker-management",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "docx",
+      "name": "docx",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "domain-intel",
+      "name": "domain-intel",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "drug-discovery",
+      "name": "drug-discovery",
+      "category": "Health & Life Sciences"
+    },
+    {
+      "id": "dspy",
+      "name": "dspy",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "duckduckgo-search",
+      "name": "duckduckgo-search",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "earth2studio-*",
+      "name": "earth2studio-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "evaluating-llms-harness",
+      "name": "evaluating-llms-harness",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "evm",
+      "name": "evm",
+      "category": "Blockchain & Web3"
+    },
+    {
+      "id": "excalidraw",
+      "name": "excalidraw",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "excel-author",
+      "name": "excel-author",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "faiss",
+      "name": "faiss",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "fastmcp",
+      "name": "fastmcp",
+      "category": "Model Context Protocol"
+    },
+    {
+      "id": "fine-tuning-with-trl",
+      "name": "fine-tuning-with-trl",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "fitness-nutrition",
+      "name": "fitness-nutrition",
+      "category": "Health & Life Sciences"
+    },
+    {
+      "id": "frontend-design",
+      "name": "frontend-design",
+      "category": "Web Development"
+    },
+    {
+      "id": "frontend-skill",
+      "name": "frontend-skill",
+      "category": "Web Development"
+    },
+    {
+      "id": "gh-address-comments",
+      "name": "gh-address-comments",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "gh-fix-ci",
+      "name": "gh-fix-ci",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "gif-search",
+      "name": "gif-search",
+      "category": "Media & Video"
+    },
+    {
+      "id": "github-auth",
+      "name": "github-auth",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "github-code-review",
+      "name": "github-code-review",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "github-issues",
+      "name": "github-issues",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "github-pr-workflow",
+      "name": "github-pr-workflow",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "github-repo-management",
+      "name": "github-repo-management",
+      "category": "GitHub & Version Control"
+    },
+    {
+      "id": "gitnexus-explorer",
+      "name": "gitnexus-explorer",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "godmode",
+      "name": "godmode",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "google-workspace",
+      "name": "google-workspace",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "grok",
+      "name": "grok",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "guidance",
+      "name": "guidance",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "heartmula",
+      "name": "heartmula",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "here.now",
+      "name": "here.now",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "hermes-agent",
+      "name": "hermes-agent",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "himalaya",
+      "name": "himalaya",
+      "category": "Email & Communication"
+    },
+    {
+      "id": "holoscan-*",
+      "name": "holoscan-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "honcho",
+      "name": "honcho",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "huggingface-accelerate",
+      "name": "huggingface-accelerate",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "huggingface-hub",
+      "name": "huggingface-hub",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "huggingface-tokenizers",
+      "name": "huggingface-tokenizers",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "humanizer",
+      "name": "humanizer",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "hyperframes",
+      "name": "hyperframes",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "hyperliquid",
+      "name": "hyperliquid",
+      "category": "Blockchain & Web3"
+    },
+    {
+      "id": "inference-sh-cli",
+      "name": "inference-sh-cli",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "instructor",
+      "name": "instructor",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "jetson-*",
+      "name": "jetson-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "jupyter-notebook",
+      "name": "jupyter-notebook",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "kanban-video-orchestrator",
+      "name": "kanban-video-orchestrator",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "lambda-labs-gpu-cloud",
+      "name": "lambda-labs-gpu-cloud",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "lbo-model",
+      "name": "lbo-model",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "llama-cpp",
+      "name": "llama-cpp",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "llava",
+      "name": "llava",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "llm-wiki",
+      "name": "llm-wiki",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "local-agent-security",
+      "name": "local-agent-security",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "manim-video",
+      "name": "manim-video",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "maps",
+      "name": "maps",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "mcp-builder",
+      "name": "mcp-builder",
+      "category": "Model Context Protocol"
+    },
+    {
+      "id": "mcp-oauth-remote-gateway",
+      "name": "mcp-oauth-remote-gateway",
+      "category": "Model Context Protocol"
+    },
+    {
+      "id": "mcporter",
+      "name": "mcporter",
+      "category": "Model Context Protocol"
+    },
+    {
+      "id": "meme-generation",
+      "name": "meme-generation",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "memento-flashcards",
+      "name": "memento-flashcards",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "merger-model",
+      "name": "merger-model",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "minecraft-modpack-server",
+      "name": "minecraft-modpack-server",
+      "category": "Gaming & Emulation"
+    },
+    {
+      "id": "modal-serverless-gpu",
+      "name": "modal-serverless-gpu",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "mpp-agent",
+      "name": "mpp-agent",
+      "category": "Payments & E-Commerce"
+    },
+    {
+      "id": "nano-pdf",
+      "name": "nano-pdf",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "nemo-*",
+      "name": "nemo-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "nemo-curator",
+      "name": "nemo-curator",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "netlify-deploy",
+      "name": "netlify-deploy",
+      "category": "Web Development"
+    },
+    {
+      "id": "neuroskill-bci",
+      "name": "neuroskill-bci",
+      "category": "Health & Life Sciences"
+    },
+    {
+      "id": "notion",
+      "name": "notion",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "obliteratus",
+      "name": "obliteratus",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "obsidian",
+      "name": "obsidian",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "ocr-and-documents",
+      "name": "ocr-and-documents",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "one-three-one-rule",
+      "name": "one-three-one-rule",
+      "category": "Communication & Protocol"
+    },
+    {
+      "id": "opencode",
+      "name": "opencode",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "openhands",
+      "name": "openhands",
+      "category": "Autonomous AI Agents"
+    },
+    {
+      "id": "optimizing-attention-flash",
+      "name": "optimizing-attention-flash",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "osint-investigation",
+      "name": "osint-investigation",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "oss-forensics",
+      "name": "oss-forensics",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "outlines",
+      "name": "outlines",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "p5js",
+      "name": "p5js",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "page-agent",
+      "name": "page-agent",
+      "category": "Web Development"
+    },
+    {
+      "id": "parallel-cli",
+      "name": "parallel-cli",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "pdf",
+      "name": "pdf",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "peft-fine-tuning",
+      "name": "peft-fine-tuning",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "pinecone",
+      "name": "pinecone",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "pinecone-research",
+      "name": "pinecone-research",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "pinggy-tunnel",
+      "name": "pinggy-tunnel",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "pixel-art",
+      "name": "pixel-art",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "pokemon-player",
+      "name": "pokemon-player",
+      "category": "Gaming & Emulation"
+    },
+    {
+      "id": "polymarket",
+      "name": "polymarket",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "popular-web-designs",
+      "name": "popular-web-designs",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "powerpoint",
+      "name": "powerpoint",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "pptx-author",
+      "name": "pptx-author",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "pretext",
+      "name": "pretext",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "pytorch-fsdp",
+      "name": "pytorch-fsdp",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "pytorch-lightning",
+      "name": "pytorch-lightning",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "qdrant-vector-search",
+      "name": "qdrant-vector-search",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "qmd",
+      "name": "qmd",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "research-paper-writing",
+      "name": "research-paper-writing",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "scrapling",
+      "name": "scrapling",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "searxng-search",
+      "name": "searxng-search",
+      "category": "Research & Web Mining"
+    },
+    {
+      "id": "security-best-practices",
+      "name": "security-best-practices",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "security-ownership-map",
+      "name": "security-ownership-map",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "security-threat-model",
+      "name": "security-threat-model",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "segment-anything-model",
+      "name": "segment-anything-model",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "serving-llms-vllm",
+      "name": "serving-llms-vllm",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "sherlock",
+      "name": "sherlock",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "shop",
+      "name": "shop",
+      "category": "Payments & E-Commerce"
+    },
+    {
+      "id": "shopify",
+      "name": "shopify",
+      "category": "Payments & E-Commerce"
+    },
+    {
+      "id": "simpo-training",
+      "name": "simpo-training",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "siyuan",
+      "name": "siyuan",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "sketch",
+      "name": "sketch",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "slides",
+      "name": "slides",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "slime-rl-training",
+      "name": "slime-rl-training",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "smart-home-iot-integration",
+      "name": "Smart Home & IoT Integration",
+      "category": "Smart Home & IoT"
+    },
+    {
+      "id": "solana",
+      "name": "solana",
+      "category": "Blockchain & Web3"
+    },
+    {
+      "id": "songsee",
+      "name": "songsee",
+      "category": "Media & Video"
+    },
+    {
+      "id": "songwriting-and-ai-music",
+      "name": "songwriting-and-ai-music",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "sparse-autoencoder-training",
+      "name": "sparse-autoencoder-training",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "spreadsheet",
+      "name": "spreadsheet",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "stable-diffusion-image-gen",
+      "name": "stable-diffusion-image-gen",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "stocks",
+      "name": "stocks",
+      "category": "Finance & Valuation"
+    },
+    {
+      "id": "stripe-link-cli",
+      "name": "stripe-link-cli",
+      "category": "Payments & E-Commerce"
+    },
+    {
+      "id": "stripe-projects",
+      "name": "stripe-projects",
+      "category": "Payments & E-Commerce"
+    },
+    {
+      "id": "tao-*",
+      "name": "tao-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "teams-meeting-pipeline",
+      "name": "teams-meeting-pipeline",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "telephony",
+      "name": "telephony",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "tensorrt-llm",
+      "name": "tensorrt-llm",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "tilegym-*",
+      "name": "tilegym-*",
+      "category": "Hardware Acceleration"
+    },
+    {
+      "id": "tldraw-offline",
+      "name": "tldraw-offline",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "touchdesigner-mcp",
+      "name": "touchdesigner-mcp",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "trl-training",
+      "name": "trl-training",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "unbroker",
+      "name": "unbroker",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "unreal-mcp",
+      "name": "unreal-mcp",
+      "category": "Creative & Design"
+    },
+    {
+      "id": "unsloth",
+      "name": "unsloth",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "vercel-deploy",
+      "name": "vercel-deploy",
+      "category": "Web Development"
+    },
+    {
+      "id": "vss-ask-video",
+      "name": "vss-ask-video",
+      "category": "Media & Video"
+    },
+    {
+      "id": "vss-deploy-detection-tracking",
+      "name": "vss-deploy-detection-tracking",
+      "category": "Media & Video"
+    },
+    {
+      "id": "vss-generate-video-report",
+      "name": "vss-generate-video-report",
+      "category": "Media & Video"
+    },
+    {
+      "id": "vss-query-analytics",
+      "name": "vss-query-analytics",
+      "category": "Media & Video"
+    },
+    {
+      "id": "vss-summarize-video",
+      "name": "vss-summarize-video",
+      "category": "Media & Video"
+    },
+    {
+      "id": "watchers",
+      "name": "watchers",
+      "category": "Data Science & DevOps"
+    },
+    {
+      "id": "web-artifacts-builder",
+      "name": "web-artifacts-builder",
+      "category": "Web Development"
+    },
+    {
+      "id": "web-pentest",
+      "name": "web-pentest",
+      "category": "Security & OSINT"
+    },
+    {
+      "id": "webapp-testing",
+      "name": "webapp-testing",
+      "category": "Web Development"
+    },
+    {
+      "id": "weights-and-biases",
+      "name": "weights-and-biases",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "whisper",
+      "name": "whisper",
+      "category": "MLOps & Fine-Tuning"
+    },
+    {
+      "id": "winui-app",
+      "name": "winui-app",
+      "category": "Web Development"
+    },
+    {
+      "id": "xlsx",
+      "name": "xlsx",
+      "category": "Productivity & Docs"
+    },
+    {
+      "id": "xurl",
+      "name": "xurl",
+      "category": "Web Development"
+    },
+    {
+      "id": "youtube-content",
+      "name": "youtube-content",
+      "category": "Media & Video"
+    },
+    {
+      "id": "yuanbao",
+      "name": "yuanbao",
+      "category": "Autonomous AI Agents"
+    }
+  ]
+}

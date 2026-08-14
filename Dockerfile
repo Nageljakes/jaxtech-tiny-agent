@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir uv==0.12.1 \
     && uv sync --frozen --no-dev
 
 COPY app ./app
+COPY catalog ./catalog
 USER 65532:65532
 EXPOSE 8080
 CMD [".venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -1,6 +1,6 @@
 from app.agent import MODEL
-from app.pipeline import feasibility_agent, intake_agent
-from app.schemas import AutomationLevel, FeasibilityResult, IntakeResult
+from app.pipeline import feasibility_agent, intake_agent, mapping_agent
+from app.schemas import AutomationLevel, FeasibilityResult, IntakeResult, MappingResult
 
 
 def test_intake_schema_captures_scoping_facts_and_missing_questions() -> None:
@@ -50,3 +50,6 @@ def test_adk_agents_use_required_model_and_structured_outputs() -> None:
     assert feasibility_agent.model == MODEL
     assert feasibility_agent.output_schema is FeasibilityResult
     assert feasibility_agent.output_key == "feasibility_result"
+    assert mapping_agent.model == MODEL
+    assert mapping_agent.output_schema is MappingResult
+    assert mapping_agent.output_key == "mapping_result"

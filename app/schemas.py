@@ -34,3 +34,18 @@ class FeasibilityResult(BaseModel):
     assumptions: list[str] = Field(min_length=1)
     exclusions: list[str]
     estimated_development_hours: int = Field(ge=1, le=2_000)
+
+
+class CapabilityMatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    capability_id: str = Field(min_length=1)
+    integrations: list[str] = Field(min_length=1)
+    rationale: str = Field(min_length=1)
+
+
+class MappingResult(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    matches: list[CapabilityMatch]
+    unmapped_requirements: list[str]
