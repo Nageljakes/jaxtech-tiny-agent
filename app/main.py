@@ -35,6 +35,17 @@ class ProofResponse(BaseModel):
     model: str
 
 
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=50_000, pattern=r".*\S.*")
+    opener: bool = False
+    history: list[dict[str, str]] = Field(default_factory=list, max_length=8)
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    source: str = Field(serialization_alias="from")
+
+
 def get_agent_service() -> AgentService:
     return _agent_service
 
@@ -57,3 +68,13 @@ async def prove_stack(
 ) -> ProofResponse:
     reply = await service.prove(request.message)
     return ProofResponse(reply=reply, framework="google-adk", model=MODEL)
+
+
+@app.post("/api/chat", response_model=ChatResponse, response_model_by_alias=True)
+async def chat(
+    request: ChatRequest,
+    service: Annotated[AgentService, Depends(get_agent_service)],
+) -> ChatResponse:
+    """Compatibility endpoint used while the challenge UI migrates to Google."""
+    reply = await service.prove(request.message)
+    return ChatResponse(reply=reply, source="google-adk")
